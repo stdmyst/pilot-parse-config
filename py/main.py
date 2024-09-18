@@ -80,6 +80,7 @@ def get_id_by_name(tree, name):
     for el in tree["SConfiguration"][0]["Metadata"][0]["Types"][0]["MType"].values():
         if el["Name"][0] == name:
             return el["Id"][0]
+
         
 def get_id_by_title(tree, title):
     for el in tree["SConfiguration"][0]["Metadata"][0]["Types"][0]["MType"].values():
