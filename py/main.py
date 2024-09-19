@@ -92,7 +92,6 @@ def get_value_by_id(tree, el_id, value="Name"):
     for el in tree["SConfiguration"][0]["Metadata"][0]["Types"][0]["MType"].values():
         if el["Id"][0] == el_id:
             if value == 'Attributes':
-                s = el[value][0]['MAttribute']
                 ar = list()
                 for i in range(len(x := el[value][0]['MAttribute'])):
                     try:
