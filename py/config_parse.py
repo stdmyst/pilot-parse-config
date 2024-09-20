@@ -1,9 +1,8 @@
 from bs4 import (ProcessingInstruction, Doctype, NavigableString,
                  BeautifulSoup as Soup)
 
-# import requests
-# import lxml
 import json
+# import requests
 
 
 def parsing_xml(tree):

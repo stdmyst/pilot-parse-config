@@ -1,16 +1,13 @@
-# from pprint import pprint
 from config_parse import get_soup, parsing_xml
 
-# import xlsxwriter
-# import openpyxl
-# import numpy as np
 import json
 import pandas as pd
 
 
-# See example:
-# - https://stackoverflow.com/questions/13575090/construct-pandas-dataframe-from-items-in-nested-dictionary
-#
+'''
+See example:
+- https://stackoverflow.com/questions/13575090/construct-pandas-dataframe-from-items-in-nested-dictionary
+'''
 def flatten_dict(nested_dict):
     res = {}
     if isinstance(nested_dict, dict):
@@ -29,13 +26,27 @@ def create_multiindex_df(values_dict, tree):
     flat_dict = flatten_dict(values_dict)
     result_list = []
     cache = dict()
-    # Insert images:
-    # - https://stackoverflow.com/questions/51601031/python-writing-images-and-dataframes-to-the-same-excel-file
-    #
-    # "Icon" and some other parameters are not specified in the script
-    attr_d = {"Id": [], "Name": [], "Title": [], "Sort": [],
-              "HasFiles": [], "IsDeleted": [], "Kind": [], "Attributes": [] ,
-              "IsMountable": [], "IsService": [], "IsProject": [], "Configuration": []}
+    '''
+    Insert images:
+    - https://stackoverflow.com/questions/51601031/python-writing-images-and-dataframes-to-the-same-excel-file
+
+    "Icon" and some other parameters are not specified in the script
+    '''
+    attr_list = [
+        "Id",
+        "Name",
+        "Title",
+        "Sort",
+        "HasFiles",
+        "IsDeleted",
+        "Kind",
+        "Attributes",
+        "IsMountable",
+        "IsService",
+        "IsProject",
+        "Configuration"
+        ]
+    attr_d = {key: [] for key in attr_list}
     for tupple_el in flat_dict:
         for i, el in enumerate(tupple_el):
             if not cache.__contains__(i):
@@ -137,22 +148,24 @@ def main():
         df.to_excel(writer, sheet_name='Карта типов конфигурации', index=False)  # send df to writer
         writer.close()
 
-        # See XlsxWriter:
-        # - https://stackoverflow.com/questions/17326973/is-there-a-way-to-auto-adjust-excel-column-widths-with-pandas-excelwriter
-        # 
-        # Example:
-        #
-        # writer = pd.ExcelWriter('file_name', engine='xlsxwriter')
-        # df.to_excel(writer, sheet_name='Type_tree')  # send df to writer
-        # worksheet = writer.sheets['Type_tree']  # pull worksheet object
-        # for idx, col in enumerate(df):  # loop through all columns
-        #     series = df[col]
-        #     max_len = max((
-        #         series.astype(str).map(len).max(),  # len of largest item
-        #         len(str(series.name))  # len of column name/header
-        #         )) + 1  # adding a little extra space
-        #     worksheet.set_column(idx, idx, max_len)  # set column width
-        # writer.close()
+        '''
+        See XlsxWriter:
+        - https://stackoverflow.com/questions/17326973/is-there-a-way-to-auto-adjust-excel-column-widths-with-pandas-excelwriter
+        
+        Example:
+        
+        writer = pd.ExcelWriter('file_name', engine='xlsxwriter')
+        df.to_excel(writer, sheet_name='Type_tree')  # send df to writer
+        worksheet = writer.sheets['Type_tree']  # pull worksheet object
+        for idx, col in enumerate(df):  # loop through all columns
+            series = df[col]
+            max_len = max((
+                series.astype(str).map(len).max(),  # len of largest item
+                len(str(series.name))  # len of column name/header
+                )) + 1  # adding a little extra space
+            worksheet.set_column(idx, idx, max_len)  # set column width
+        writer.close()
+        '''
         
         # To JSON:
         #

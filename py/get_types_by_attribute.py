@@ -1,7 +1,6 @@
 from config_parse import get_soup, parsing_xml
 from pprint import pprint
 
-# import pandas as pd
 import json
 
 
@@ -30,7 +29,6 @@ def main():
         except KeyError as e:
             continue
 
-    # df = pd.DataFrame(search_result)
     pprint(search_result)
 
 
