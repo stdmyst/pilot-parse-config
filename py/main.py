@@ -30,6 +30,11 @@ def search_children(
     
     level_y[0] += 1
     level_x[0] += 1
+    
+    # testing
+    if type_id == "328":
+        pass
+
     if not (flag := (type_id in cache_id)):
         cache_id.append(type_id)  
     current_type = (obj_tree[type_id])
@@ -94,9 +99,10 @@ def make_attr_as_str(a) -> (str | Any):
 def get_attr_keys(tree, cache=[]) -> dict[Any, list]:
     for el in tree:
         try:
-            for s in list(list(el["Attributes"][0]["MAttribute"].values())[0].keys()):
-                 if s not in cache:
-                      cache.append(s)
+            for s in list(list(el["Attributes"][0]["MAttribute"].values())):
+                 for k in s.keys():
+                    if k not in cache:
+                         cache.append(k)
         except Exception:
             continue
     return {k: [] for k in sorted(cache)}
@@ -121,12 +127,14 @@ def make_attrs_df(tree) -> pd.DataFrame:
                 k = set(list(attr.keys()))
                 diff_k = set(attrs_keys).difference(k)
                 [search_result[x].append(attr[x][0]) for x in attr.keys()]
-                [search_result[x].append(None) for x in diff_k]
+                if len(diff_k):  # if there are differences
+                    [search_result[x].append(None) for x in diff_k]
                 if flag:
                     flag = 0
                     continue
                 [search_result[x].append(None) for x in ["Id", "TypeName", "TypeTitle"]]
-        except KeyError:
+        except KeyError as e:
+            print(e)
             [search_result[x].append(None) for x in attrs_keys]                  
     return pd.DataFrame(search_result)
         
@@ -148,7 +156,7 @@ def main() -> None:
         type_id=el_id,
         obj_tree=parsed_soup_w_id,
         )
-    columns = [f"level_{x}" for x in range(max_level_x+1)]
+    columns = [f"level_{x}" for x in range(max_level_x+2)]  # !
     columns.extend(attrs)
     ids = [y for y in range(max_level_y+1)]
     df = pd.DataFrame(
