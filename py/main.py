@@ -158,8 +158,8 @@ def main() -> None:
     )
     for d in data:
         y, x = d["level_y"], d["level_x"]
-        n = d["Title"][0]
-        df.iloc[y, x] = n
+        # n = d["Title"][0]
+        # df.iloc[y, x] = n
         for attr in attrs:
             if attr not in d:
                 d[attr] = None
@@ -210,13 +210,11 @@ def main() -> None:
     # path = "/".join(__file__.replace("\\", "/").split("/")[:-2]) + "/files/icons/"
     path = "files/icons/"
     for row, image in enumerate(images):
-        ic = f"icon_0.svg"  # testing
-        # ic = f"icon_{count}.svg"
+        # ic = f"icon_0.svg"  # testing
+        ic = f"icon_{count}.svg"
         if image == "":
             continue
-        # with open(path+ic, "wb") as f:
-        #     f.write(image)
-        with open(path+ic, "wb") as f:  # testing
+        with open(path+ic, "wb") as f:
             f.write(image)
         ''' 
         # svg2png uses third path dll
