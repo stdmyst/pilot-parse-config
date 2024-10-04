@@ -191,38 +191,35 @@ def main() -> None:
     worksheet = workbook.get_worksheet_by_name('Карта типов конфигурации')
 
     col = df_hierarchy.columns.get_loc("Icon")
-    
     '''
     # need exception handler
     images = [base64.b64decode(image) for image in df_hierarchy.loc[:, "Icon"].to_list()]
     '''
-    # need to add caching to avoid saving already saved icons
-    images = []
-    for image in df_hierarchy.loc[:, "Icon"].to_list():
-        try:
-            images.append(base64.b64decode(image))  # checking if correct string
-        except binasciiError:
-            images.append("")
-        except TypeError:
-            images.append("")
-
+    images_cache = dict()
     count = 0
-    # path = "/".join(__file__.replace("\\", "/").split("/")[:-2]) + "/files/icons/"
     path = "files/icons/"
-    for row, image in enumerate(images):
-        # ic = f"icon_0.svg"  # testing
-        ic = f"icon_{count}.svg"
-        if image == "":
-            continue
-        with open(path+ic, "wb") as f:
-            f.write(image)
+    for row, image in enumerate(df_hierarchy.loc[:, "Icon"].to_list()):
+        if image in images_cache:
+            ic = images_cache[image]
+        else:
+            try:
+                svg_obj = base64.b64decode(image)  # checking if correct string
+            except binasciiError:
+                continue
+            except TypeError:
+                continue
+            # ic = f"icon_0.svg"  # testing
+            ic = f"icon_{count}.svg"
+            count += 1
+            with open(path+ic, "wb") as f:
+                f.write(svg_obj)
+            images_cache[image] = ic
         ''' 
         # svg2png uses third path dll
         svg2png(bytestring=image, write_to=(path+".png"))
         worksheet.embed_image(row+1, col, p)
         '''
         worksheet.write_url(row+1, col, "icons/"+ic, string="Open icon")  # "icons/"+ic instead path+ic
-        count += 1
     
     writer.close()
 
