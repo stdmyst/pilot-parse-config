@@ -1,24 +1,23 @@
-from bs4 import (ProcessingInstruction, Doctype, NavigableString,
+from bs4 import (
+    ProcessingInstruction, Doctype, NavigableString,
                  BeautifulSoup as Soup)
+from config import Config
+from pathlib import Path
 
 import json
 # import requests
 
 
-def parsing_xml(tree):
+def parsing_xml(tree: Soup) -> (str | dict):
     cache = {}
     result = {}
-    
     for sub_tree in tree.contents:
-        if isinstance(sub_tree, ProcessingInstruction):
-            pass
-        elif isinstance(sub_tree, Doctype):
+        if any([isinstance(sub_tree, x) for x in (ProcessingInstruction, Doctype)]):
             pass
         else:
            if str(sub_tree) != "\n":
                 if isinstance(sub_tree, NavigableString):
                     return str(sub_tree)
-                
                 if sub_tree.name not in result:
                     result[sub_tree.name] = {}
                     cache[sub_tree.name] = 0
@@ -27,7 +26,7 @@ def parsing_xml(tree):
     return result
 
 
-def get_soup(url):
+def get_soup(url: str) -> Soup:
     # if url.startswith("http"):
     #     try:
     #         req = requests.get(url)
@@ -46,22 +45,22 @@ def get_soup(url):
     
     try:
         with open(url, encoding="UTF-8") as f:
-            soup = Soup(f, "xml")
+            t = Soup(f, "xml").find("Types")
+            return t
     except OSError as e:
         print(e)
-        return
-    return soup
 
 
-def main():
-    with open("settings.json", encoding="UTF-8") as f:
-        settings = json.load(f)
-        url = settings["url"].replace("\\", "/")
+def main() -> None:
+    # with open("settings.json", encoding="UTF-8") as f:
+    #     settings = json.load(f)
+    #     url = settings["url"].replace("\\", "/")
+
+    url = Config.CONFIG_PATH 
     
     if (bs_obj := get_soup(url)):
         result = parsing_xml(bs_obj)
-        
-        with open(f"files/{url.split("/")[-1]}.json", "w", encoding="UTF-8") as f:
+        with open(f"files/{Path(url).stem}.json", "w", encoding="UTF-8") as f:
             json.dump(result, f, ensure_ascii=False, indent=2)
 
 
