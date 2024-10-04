@@ -158,8 +158,8 @@ def main() -> None:
     )
     for d in data:
         y, x = d["level_y"], d["level_x"]
-        # n = d["Title"][0]
-        # df.iloc[y, x] = n
+        n = d["Title"][0]
+        df.iloc[y, x] = n
         for attr in attrs:
             if attr not in d:
                 d[attr] = None
