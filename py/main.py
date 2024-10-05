@@ -4,9 +4,9 @@ from bs4 import BeautifulSoup as Soup
 from typing import Any
 from binascii import Error as binasciiError
 
+# import xlsxwriter
 import pandas as pd
 import ast
-import xlsxwriter
 import base64
 
 
@@ -32,8 +32,8 @@ def search_children(
     level_x[0] += 1
     
     # testing
-    if type_id == "328":
-        pass
+    # if type_id == "328":
+    #    pass
 
     if not (flag := (type_id in cache_id)):
         cache_id.append(type_id)  
@@ -87,7 +87,7 @@ def make_attr_as_str(a) -> (str | Any):
         for i in range(len(x := d['MAttribute'])):
             ar.append([x[i]["Title"][0], x[i]["Name"][0]])
             count = i+1
-        indent = max([len(el[0]) for el in ar]) + 1 #len(str(count)) + 6
+        indent = max([len(el[0]) for el in ar]) + 1
         # on the line
         s = [f'{i+1}.'.ljust(len(str(count))+2) + (f'\"{el[0]}\":').ljust(indent+3) + f'\"{el[1]}\"' for i, el in enumerate(ar)]
         # under the line
