@@ -198,7 +198,7 @@ def main() -> None:
     workbook  = writer.book
     for sheet in ['Атрибуты типов', 'Карта типов конфигурации']:
         worksheet = workbook.get_worksheet_by_name(sheet)
-        worksheet.freeze_panes(1, 0)  # freeze first row
+        worksheet.freeze_panes(1, 0)  # freeze the first row of the worksheet
 
     col = df_hierarchy.columns.get_loc("Icon")
     '''
