@@ -145,6 +145,9 @@ def main() -> None:
     BASE_ELEMENT: str = config.BASE_ELEMENT
     
     soup: Soup = get_soup(CONFIG_PATH)
+    if not soup:
+        print("Incorrect file path.")
+        return
     parsed_soup_w_id: dict = {
         t["Id"][0]: t for t in list(parsing_xml(soup)["MType"].values())
         }
